@@ -21,6 +21,9 @@ namespace InventoryAPI.Controllers
             return new MySqlConnection(connection_string);
         }
 
+        //An inventory object is created for each row and fills in each column inside the while loop.
+        //Each inventory object is added to the inventory list and is then returned to the user as the output.
+
         [HttpGet]
         public async Task<ActionResult<List<Inventory>>> getInventory()
         {
@@ -50,6 +53,8 @@ namespace InventoryAPI.Controllers
             return Ok(inventory);
         }
 
+        //This method is meant to create an inventory object and fill in the information based on the id that is given by the user.
+
         [HttpGet("GetInventorybyID{id}")]
         public async Task<ActionResult<Inventory>> GetInventorybyID(int id)
         {
@@ -62,7 +67,7 @@ namespace InventoryAPI.Controllers
                 using var reader = await command.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
-                    Inventory inventory = new Inventory()
+                    Inventory inventory = new Inventory
                     {
                         InventoryID = id,
                         APIID = reader.GetString(1),
@@ -77,7 +82,7 @@ namespace InventoryAPI.Controllers
                     return Ok(inventory);
                 }
             }
-            return BadRequest("Contract not found");
+            return BadRequest("Inventory not found");
         }
 
         [HttpPost]
@@ -96,6 +101,8 @@ namespace InventoryAPI.Controllers
                 command.Parameters.Add(new MySqlParameter("@OperatorID", Inventory.OperatorID));
                 command.Parameters.Add(new MySqlParameter("@TractID", Inventory.TractID));
                 command.Parameters.Add(new MySqlParameter("@InventoryTypeID", Inventory.InventoryTypeID));
+
+                await command.ExecuteNonQueryAsync();
             }
             return Ok(Inventory);
         }
@@ -119,7 +126,7 @@ namespace InventoryAPI.Controllers
                 command.Parameters.Add(new MySqlParameter("@InventoryTypeID", Inventory.InventoryTypeID));
                 int result = await command.ExecuteNonQueryAsync();
                 if (result == 0)
-                    return BadRequest("Contract not found");
+                    return BadRequest("Inventory not found");
                 return Ok(Inventory);
             }
         }
