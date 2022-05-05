@@ -177,6 +177,9 @@ namespace InventoryAPI.Controllers
             return Ok(Inventory);
         }
 
+        //Update works as intended but doesn't take into account the foreign keys as each value is currently restricted
+        //in the database for MySql Workbench, so to update foreign keys this setting should change.
+
         [HttpPut("UpdateInventory{id}")]
         public async Task<ActionResult<Inventory>> UpdateContracts(Inventory Inventory, int id)
         {
@@ -200,6 +203,9 @@ namespace InventoryAPI.Controllers
                 return Ok(Inventory);
             }
         }
+
+        //Uses a stored procedure to delete the inventory based on the id given by the user.
+
         [HttpDelete("DeleteInventory{id}")]
         public async Task<ActionResult<Inventory>> DeleteInventory(int id)
         {
