@@ -153,6 +153,8 @@ namespace InventoryAPI.Controllers
 
         //This updates the values based on the input, the primary key cannot be updated and currently neither can
         //the 3 foreign keys be updated as they are restricted in the database for updates and can't cascade update.
+        //"Column count doesn't match value count at row 1" getting issue when running test, not sure about the error
+        //5 values are taken in and used in the MySql stored procedure as that takes in 5 values as well and are used.
 
         [HttpPost]
         public async Task<ActionResult<Inventory>> InsertInventory(Inventory Inventory)
@@ -162,7 +164,6 @@ namespace InventoryAPI.Controllers
                 await connection.OpenAsync();
                 using MySqlCommand command = new MySqlCommand("InsertInventory", connection);
                 command.CommandType = System.Data.CommandType.StoredProcedure;
-                //command.Parameters.Add(new MySqlParameter("@InventoryID", Inventory.InventoryID));
                 command.Parameters.Add(new MySqlParameter("@APIID", Inventory.APIID));
                 command.Parameters.Add(new MySqlParameter("@SerialNumber", Inventory.SerialNumber));
                 command.Parameters.Add(new MySqlParameter("@Name", Inventory.Name));
